@@ -1,5 +1,7 @@
+import React from "react";
+
 export const Filter = ({ filter, onChange }) => {
-  const inputChange = (event) => {
+  const handleInputChange = (event) => {
     onChange(event.target.value);
   };
 
@@ -8,7 +10,7 @@ export const Filter = ({ filter, onChange }) => {
       <input
         type="text"
         value={filter}
-        onChange={inputChange}
+        onChange={handleInputChange}
         placeholder="Filter todos"
       />
     </div>

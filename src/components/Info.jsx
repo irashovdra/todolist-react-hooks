@@ -1,3 +1,5 @@
+import React from "react";
+
 export const Info = ({ total, completed }) => {
   return (
     <div>

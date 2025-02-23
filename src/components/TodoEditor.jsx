@@ -1,32 +1,35 @@
-import { Component } from "react";
+import React, { Component } from "react";
 
-export class TodoEditor extends Component {
+class TodoEditor extends Component {
   state = {
-    textValue: "",
+    text: "",
   };
 
-  stateChange = (event) => {
-    this.setState({ textValue: event.target.value });
+  handleChange = (event) => {
+    this.setState({ text: event.target.value });
   };
 
-  submitNewTodo = (event) => {
+  handleSubmit = (event) => {
     event.preventDefault();
-    const { textValue } = this.state;
-    this.props.onAddTodo(textValue);
-    this.setState({ textValue: "" });
+    const { text } = this.state;
+    if (text.trim() === "") return;
+    this.props.onAddTodo(text);
+    this.setState({ text: "" });
   };
 
   render() {
     return (
-      <form onSubmit={this.submitNewTodo}>
+      <form onSubmit={this.handleSubmit}>
         <input
           type="text"
-          value={this.state.textValue}
-          onChange={this.stateChange}
-          placeholder="Enter new to-do"
+          value={this.state.text}
+          onChange={this.handleChange}
+          placeholder="Enter new todo"
         />
         <button type="submit">Add Todo</button>
       </form>
     );
   }
 }
+
+export { TodoEditor };

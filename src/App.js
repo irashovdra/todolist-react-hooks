@@ -1,12 +1,13 @@
-import "./App.css";
-import { Component } from "react";
-import { TodoEditor } from "./components/TodoEditor";
-import { TodoList } from "./components/TodoList";
-import { Filter } from "./components/Filter";
-import { Info } from "./components/Info";
+import React, { Component } from "react";
+import { TodoList } from "./components/TodoList.jsx";
+import { TodoEditor } from "./components/TodoEditor.jsx";
+import { Filter } from "./components/Filter.jsx";
+import { Info } from "./components/Info.jsx";
 import initialTodos from "./data/todo.json";
 
-class App extends Component {
+export class App extends Component {
+  nextId = initialTodos.length + 1;
+
   state = {
     todos: initialTodos,
     filter: "",
@@ -14,30 +15,32 @@ class App extends Component {
 
   addTodo = (text) => {
     const newTodo = {
-      id: `id-${this.nextId}`,
-      text,
+      id: "id-" + this.nextId,
+      text: text,
       completed: false,
     };
-
-    this.nextId += 1;
-
+    this.nextId++;
     this.setState((prevState) => ({
-      todos: [newTodo, ...prevState],
+      todos: [newTodo, ...prevState.todos],
     }));
   };
 
-  deleteTodo = (todoId) => {
+  deleteTodo = (id) => {
     this.setState((prevState) => ({
-      todos: prevState.todos.filter((todo) => todo.id !== todoId),
+      todos: prevState.todos.filter((todo) => todo.id !== id),
     }));
   };
 
-  checkTodo = (todoId) => {
+  toggleTodo = (id) => {
     this.setState((prevState) => ({
       todos: prevState.todos.map((todo) => {
-        todo.id === todoId ? { ...todo, completed: !todo.completed } : todo;
+        return todo.id === id ? { ...todo, completed: !todo.completed } : todo;
       }),
     }));
+  };
+
+  changeFilter = (value) => {
+    this.setState({ filter: value });
   };
 
   getFilteredTodos = () => {
@@ -46,7 +49,7 @@ class App extends Component {
       return todos;
     }
     return todos.filter((todo) =>
-      todo.textValue.toLowerCase().includes(filter.toLowerCase())
+      todo.text.toLowerCase().includes(filter.toLowerCase())
     );
   };
 
@@ -59,18 +62,16 @@ class App extends Component {
 
     return (
       <div>
-        <h1>To-do App</h1>
+        <h1>Todo App</h1>
         <TodoEditor onAddTodo={this.addTodo} />
         <Filter filter={this.state.filter} onChange={this.changeFilter} />
         <TodoList
           todos={filteredTodos}
           onDeleteTodo={this.deleteTodo}
-          onCheckTodo={this.checkTodo}
+          onToggleTodo={this.toggleTodo}
         />
         <Info total={totalTodos} completed={completedTodos} />
       </div>
     );
   }
 }
-
-export default App;
