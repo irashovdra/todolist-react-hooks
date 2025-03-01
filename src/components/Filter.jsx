@@ -1,18 +1,14 @@
 import React from "react";
 
-export const Filter = ({ filter, onChange }) => {
-  const handleInputChange = (event) => {
-    onChange(event.target.value);
-  };
-
+const Filter = ({ filter, onChange }) => {
   return (
-    <div>
-      <input
-        type="text"
-        value={filter}
-        onChange={handleInputChange}
-        placeholder="Filter todos"
-      />
-    </div>
+    <input
+      type="text"
+      value={filter}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder="Фільтрувати завдання..."
+    />
   );
 };
+
+export { Filter };

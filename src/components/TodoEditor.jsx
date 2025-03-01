@@ -2,19 +2,18 @@ import React, { Component } from "react";
 
 class TodoEditor extends Component {
   state = {
-    text: "",
+    textValue: "",
   };
 
-  handleChange = (event) => {
-    this.setState({ text: event.target.value });
+  handleChange = (e) => {
+    this.setState({ textValue: e.target.value });
   };
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    const { text } = this.state;
-    if (text.trim() === "") return;
-    this.props.onAddTodo(text);
-    this.setState({ text: "" });
+  handleSubmit = (e) => {
+    e.preventDefault();
+    if (this.state.textValue.trim() === "") return;
+    this.props.onAddTodo(this.state.textValue);
+    this.setState({ textValue: "" });
   };
 
   render() {
@@ -22,11 +21,11 @@ class TodoEditor extends Component {
       <form onSubmit={this.handleSubmit}>
         <input
           type="text"
-          value={this.state.text}
+          value={this.state.textValue}
           onChange={this.handleChange}
-          placeholder="Enter new todo"
+          placeholder="Додати завдання..."
         />
-        <button type="submit">Add Todo</button>
+        <button type="submit">Додати</button>
       </form>
     );
   }

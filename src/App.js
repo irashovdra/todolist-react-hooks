@@ -5,7 +5,7 @@ import { Filter } from "./components/Filter.jsx";
 import { Info } from "./components/Info.jsx";
 import initialTodos from "./data/todo.json";
 
-export class App extends Component {
+class App extends Component {
   nextId = initialTodos.length + 1;
 
   state = {
@@ -33,9 +33,9 @@ export class App extends Component {
 
   toggleTodo = (id) => {
     this.setState((prevState) => ({
-      todos: prevState.todos.map((todo) => {
-        return todo.id === id ? { ...todo, completed: !todo.completed } : todo;
-      }),
+      todos: prevState.todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      ),
     }));
   };
 
@@ -75,3 +75,5 @@ export class App extends Component {
     );
   }
 }
+
+export { App };
