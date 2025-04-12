@@ -1,79 +1,66 @@
-import React, { Component } from "react";
-import { TodoList } from "./components/TodoList.jsx";
+import React from "react";
+import { useState, useEffect } from "react";
+import { TodoList } from "./components/TodoList/TodoList.jsx";
 import { TodoEditor } from "./components/TodoEditor.jsx";
-import { Filter } from "./components/Filter.jsx";
-import { Info } from "./components/Info.jsx";
+import { Filter } from "./components/Filter/Filter.jsx";
+import { Info } from "./components/Info/Info.jsx";
 import initialTodos from "./data/todo.json";
+import "./App.css";
 
-class App extends Component {
-  nextId = initialTodos.length + 1;
+let nextId = initialTodos.length + 1;
 
-  state = {
-    todos: initialTodos,
-    filter: "",
-  };
+const App = () => {
+  const [todos, setTodos] = useState(initialTodos);
+  const [filter, setFilter] = useState("");
 
-  addTodo = (text) => {
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
+  const addTodo = (text) => {
     const newTodo = {
-      id: "id-" + this.nextId,
-      text: text,
+      id: "id-" + nextId++,
+      text,
       completed: false,
     };
-    this.nextId++;
-    this.setState((prevState) => ({
-      todos: [newTodo, ...prevState.todos],
-    }));
+    setTodos([newTodo, ...todos]);
   };
 
-  deleteTodo = (id) => {
-    this.setState((prevState) => ({
-      todos: prevState.todos.filter((todo) => todo.id !== id),
-    }));
+  const deleteTodo = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
   };
 
-  toggleTodo = (id) => {
-    this.setState((prevState) => ({
-      todos: prevState.todos.map((todo) =>
+  const toggleTodo = (id) => {
+    setTodos(
+      todos.map((todo) =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      ),
-    }));
-  };
-
-  changeFilter = (value) => {
-    this.setState({ filter: value });
-  };
-
-  getFilteredTodos = () => {
-    const { todos, filter } = this.state;
-    if (filter.trim() === "") {
-      return todos;
-    }
-    return todos.filter((todo) =>
-      todo.text.toLowerCase().includes(filter.toLowerCase())
+      )
     );
   };
 
-  render() {
-    const filteredTodos = this.getFilteredTodos();
-    const totalTodos = this.state.todos.length;
-    const completedTodos = this.state.todos.filter(
-      (todo) => todo.completed
-    ).length;
+  const filteredTodos =
+    filter === ""
+      ? todos
+      : todos.filter((todo) =>
+          todo.text.toLowerCase().includes(filter.toLowerCase())
+        );
 
-    return (
-      <div>
-        <h1>Todo App</h1>
-        <TodoEditor onAddTodo={this.addTodo} />
-        <Filter filter={this.state.filter} onChange={this.changeFilter} />
-        <TodoList
-          todos={filteredTodos}
-          onDeleteTodo={this.deleteTodo}
-          onToggleTodo={this.toggleTodo}
-        />
-        <Info total={totalTodos} completed={completedTodos} />
-      </div>
-    );
-  }
-}
+  const total = todos.length;
+  const completed = todos.filter((todo) => todo.completed).length;
+
+  return (
+    <div>
+      <h1>Todo App</h1>
+      <TodoEditor onAddTodo={addTodo} />
+      <Filter filter={filter} onChange={setFilter} />
+      <TodoList
+        todos={filteredTodos}
+        onDeleteTodo={deleteTodo}
+        onToggleTodo={toggleTodo}
+      />
+      <Info total={total} completed={completed} />
+    </div>
+  );
+};
 
 export { App };
